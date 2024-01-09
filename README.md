@@ -5,6 +5,14 @@
 
 
 
+### 效果图
+
+![](./static/img/框架3.png)
+
+![](./static/img/框架3_1.png)
+
+
+
 ```python
 def predict(data):
 # Inference context setup
