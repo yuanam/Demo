@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dagre-D3</title>
+    <style>
+        .tooltip {
+            position: absolute;
+            font-size: 12px;
+            text-align: center;
+            background-color: white;
+            border-radius: 3px;
+            box-shadow: rgb(174, 174, 174) 0px 0px 10px;
+            cursor: pointer;
+            display: inline-block;
+            padding:10px;
+        }
+
+        .tooltip>div {
+            padding: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <svg width="700" height="450"></svg>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="https://dagrejs.github.io/project/dagre-d3/latest/dagre-d3.min.js"></script>
+    <script>
+        let dataset ={
+					nodes: [
+                        {id: 0, label: "RESULT"},
+						{id: 1, label: "OPERATOR:PREDICT OP\n \nNAME:VIEW1",shape: "rect", float:"output([VIEW1.expedia_data_q1.srch_id], [VIEW1.expedia_data_q1.prop_id])"},
+						{id: 2, label: "OPERATOR:TABLE SCAN\n \nNAME:expedia_data_q1",shape: "rect",float:"output([expedia_data_q1.__pk_increment], [expedia_data_q1.srch_saturday_night_bool], [expedia_data_q1.srch_id], [expedia_data_q1.prop_id])"},
+                        {id: 3, label: "START"}
+					],
+					edges: [
+                        {source: 1,target: 0,label: ""},
+						{source: 2,target: 1,label: ""},
+                        {source: 3,target: 2,label: ""},
+					]
+					}
+        // 创建 graph 对象
+        let g = new dagreD3.graphlib.Graph();
+        g.setGraph({
+            rankdir: 'TB', // 设置节点的延伸排列方向，从上到下 TB从上到下
+            align: 'DL',  // 设置相同rank中node节点的对齐方式 DL下左
+            nodesep: 100,  // 相同层级rank中node的间距
+            edgesep: 100,  //edge之间的间距
+            ranksep: 50,  // 相邻层级之间的间距
+            marginx: 50,  //图整体与画布的左右间距
+            marginy: 100,  //图整体与画布的上下间距
+        });
+        /*
+        node 配置
+        labelType节点标签格式,可以设置文本以及html格式
+        label 节点标签，即节点上要显示的文本，设置html格式时，label为html标签
+        shape 节点形状，可以设置rect,circle,ellipse,diamond 四种形状，还可以使用render.shapes()自定义形状
+        style 节点样式, 可设置节点的颜色填充、节点边框，如style: “fill:#fff;stroke:#faf”
+        labelStyle 节点标签样式, 可设置节点标签的文本样式（颜色、粗细、大小），如style: “fill:#afa;font-weight:bold”
+        width 即节点宽度
+        height 即节点高度
+
+        edge 配置
+        abelType边标签格式，可以设置文本以及 html 格式，默认为文本格式。
+        label 边标签，即节点上要显示的文本，设置 html 格式时，label为 html 标签。
+        style 边样式, 可设置边的颜色填充、边框，如style: “fill:#fff;stroke:#faf”
+        labelStyle 边标签样式, 可设置边标签的文本样式（颜色、粗细、大小），如labelStyle: “fill:#afa;font-weight:bold”
+        arrowhead 箭头形状，可以设置 normal,vee,undirected 三种样式，默认为 normal。
+        arrowheadStyle 箭头样式，可以设置箭头颜色等，如 arrowheadStyle:“fill:#f66”
+        */
+        dataset.nodes.forEach(item => {
+            g.setNode(item.id, {
+            //节点标签
+            label: item.label,
+            //节点形状
+            shape: item.shape,
+
+            float: item.float,
+
+            style: "fill:#fff; stroke:#d4a5a5",  //节点样式,可设置节点的颜色填充、节点边框
+            labelStyle: 'fill: #000; font-style: italic; font-weight: 545',  //节点标签样式, 可设置节点标签的文本样式（颜色、粗细、大小）
+            rx: 5,  // 设置圆角
+            ry: 5,  // 设置圆角
+            paddingBottom: 15,
+            paddingLeft: 20,
+            paddingRight: 20,
+            paddingTop: 15,
+            //节点样式
+            // style: "textAlign: 'center';fill:#fff; stroke:#000; margin: 20px"
+
+            // "width: 80px; height: 40px; line-height: 40px; font-size: 16px; text-align: center; border: 1px solid black; border-radius: 20px"
+            })
+        })
+        dataset.edges.forEach(item => {
+            g.setEdge(item.source,item.target, {
+                //边标签
+                label: item.label,
+                //边样式
+                // style: "fill:#fff;stroke:#333;stroke-width:1.5px"
+                style: 'stroke: #8f7b7b; fill: none; stroke-width: 2px',  // 连线样式
+                arrowheadStyle: 'fill: #fff;stroke: #8f7b7b;',  //箭头样式，可以设置箭头颜色
+                arrowhead: 'normal',  //箭头形状，可以设置 normal,vee,undirected 三种样式，默认为 normal
+            })
+        })
+        // 创建渲染器
+        let render = new dagreD3.render();
+
+        // 选择 svg 并添加一个g元素作为绘图容器.
+        let svg = d3.select('svg')
+        let svgGroup = svg.append('g');
+
+        // 在绘图容器上运行渲染器生成流程图.
+        render(svgGroup, g);
+
+        // 建立拖拽缩放
+        let zoom = d3.zoom()
+            .on("zoom", function () {
+                svgGroup.attr("transform", d3.event.transform);
+            });
+        svg.call(zoom);
+
+        var styleTooltip = function (name) {
+            return "<p class='name'>" + name + "</p>";
+        };
+
+        //创建提示框
+        function createTooltip() {
+            return d3.select('body')
+                .append('div')
+                .classed('tooltip', true)
+                .style('opacity', 0)
+                .style('display', 'none');
+        };
+        let tooltip = createTooltip();
+        //tooltip显示
+        function tipVisible(textContent) {
+            tooltip.transition()
+                .duration(400)
+                .style('opacity', 0.9)
+                .style('display', 'block');
+            tooltip.html(textContent)
+                .style('left', (d3.event.pageX + 15) + 'px')
+                .style('top', (d3.event.pageY + 15) + 'px');
+        }
+        //tooltip隐藏
+        function tipHidden() {
+            tooltip.transition()
+                .duration(400)
+                .style('opacity', 0)
+                .style('display', 'none');
+        }
+
+        //鼠标悬停显示隐藏tooltip
+        svgGroup.selectAll("g.node")
+        .on("mouseover", function (v) {
+            tipVisible(g.node(v).float);
+        })
+        .on("mouseout", function (v) {
+            tipHidden();
+        })
+
+        // Center the graph
+        var xCenterOffset = (svg.attr('width') - g.graph().width) / 2;
+        svgGroup.attr('transform', 'translate(' + xCenterOffset + ', 20)');
+        svg.attr('height', g.graph().height + 40);
+    </script>
+</body>
+
+</html>

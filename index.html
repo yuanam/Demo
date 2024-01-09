@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="en-US">
+    <head>
+        <meta charset="UTF-8">
+        <title>Demo</title>
+
+        <meta name="description" content="prediction operator, results\plan before-after">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+
+        <script>
+            $(function(){
+                var li = $('#tabs');
+                var cc=$('#tabs option');
+                var len=cc.length;
+                li.change(function(){
+                    var t = parseInt(li.get(0).selectedIndex);
+                    for(var i= 0;i<len;i++){
+                        if(t==i){
+                            $('#chanpin'+t).show();
+                         }else{
+                           $('#chanpin'+i).hide();
+                         }
+                      }
+                });
+            });
+        </script>
+
+        <style type="text/css"> 
+html,body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+.container {
+    height: 100%;  
+}
+header {
+    width: 100%;
+    height: 88px;
+    background-color: #e9e9e9;
+}
+#logo_l {
+    left:400px;
+    top:20px;
+    position :absolute;
+}
+p {
+    color: black;
+    left:458px;
+    top:5px;
+    position :absolute;
+    font-weight: bold;
+    font-size: 24px
+}
+
+        /* // 主体绝对定位 */
+.contont {
+    position: absolute;
+    left: 0;
+    top: 88px;
+    bottom: 0;
+    width: 100%;
+}
+
+.left {
+    position: absolute;
+    height: 100%;
+    width: 567px;
+    background-color: white;
+    overflow: auto;
+}
+
+
+/* //侧边栏浮动 */
+#editor {
+    margin-top: 0;
+    position: absolute;
+    float: left;
+    width: 567px;
+    height: 30%;
+    left: 0;
+    right: 0;
+}
+
+#editor2 {
+    position: absolute;
+    float: left;
+    width: 567px;
+    height: 55%;
+    margin-top: 0;
+    left: 0;
+    right: 0;
+
+    
+}
+
+/* 
+#button_submit {
+    top: 88px;
+    margin-left: 490px;
+} */
+        /* // 右侧overflow: auto滚动条 */
+.main {
+    margin-left: 567px;
+    height: 100%;
+    background-color: white;
+    overflow: auto;
+}
+
+.main #left_up {
+    width: 600px; 
+    height: 430px; 
+    margin: 0; 
+    padding: 0;
+    /* background-color: red; */
+    float: left;
+    position: absolute;
+}
+.plan_box {
+	overflow: hidden;
+	}
+.plan_box table {
+	border-spacing: 0;
+}
+.plan_box table thead tr:nth-child(2n+1) {
+	background-color: #cfcfce;
+}
+.plan_box table tr {
+	height: 40px;
+	font-size: 16px;
+	color: #000;
+	line-height: 16px;
+	font-weight: 400;
+	text-align: center;
+	}
+.plan_box table tr:nth-child(2n) {
+	background-color: #e9e9e9;
+	}
+.plan_box table .head {
+	font-size: 18px;
+	color: black;
+	line-height: 18px;
+	font-weight: 600;
+	text-align: center;
+	}
+
+.main #right_up{
+    width: 600px; 
+    height: 430px;
+    position: absolute; 
+    margin-left: 650px;
+    padding: 0;
+    float: right;
+    /* background-color: blue; */
+    text-align: center;
+}
+
+/* .main #right_up #ru {
+    left: 100px;
+    position: absolute;
+} */
+
+.main #down {
+    margin-top: 400px;
+    position: absolute;
+    width:1200px;
+    height:430px;
+    /* display:flex;  弹性盒子 */
+    justify-content: space-between;  /*两端对齐，子元素之间有间隙*/
+}
+
+#down .down_left {
+    width: 400px;
+    height: 500px;
+    float: left;
+    position: absolute;
+}
+
+#down .down_right {
+    margin-left: 400px;
+    float: left;
+    height: 500px;
+    position: absolute;
+}
+
+
+.selector {
+    width: 400px;
+    height: 40px;
+    margin-bottom: 10px;
+    margin-left:20px ;
+    margin-top: 10px;
+    font-family: cursive, sans-serif;
+    outline: 0;
+    background: white;
+    color: black ;
+    border: 1px solid rgb(248, 212, 179);
+    padding: 4px;
+    border-radius: 9px;
+    font-size: 22px;
+}
+
+/*
+.main #left_down {
+    width: 25%; 
+    height: 50%; 
+    margin-left: 10px; 
+    padding: 0;
+    float: left;
+    /* background-color: yellow; */
+
+
+
+/* .main #right_down{
+    width: 70%; 
+    height: 50%; 
+    margin: 0; 
+    padding: 0;
+    float: right;
+    text-align: center;
+    /* background-color: black; */
+*/
+#down .active{
+    display: block;
+}
+.chart{
+    width: 850px;
+    height: 390px;
+}
+.none {
+    display: none;
+}
+
+#figure {
+  float: right;
+  width: 30%;
+  text-align: center;
+  font-style: italic;
+  font-size: smaller;
+  text-indent: 0;
+  border: thin silver solid;
+  margin: 0.5em;
+  padding: 0.5em;
+}
+
+.tooltip {
+    position: absolute;
+    font-size: 12px;
+    text-align: center;
+    background-color: white;
+    border-radius: 3px;
+    box-shadow: rgb(174, 174, 174) 0px 0px 10px;
+    cursor: pointer;
+    display: inline-block;
+    padding:10px;
+}
+
+.tooltip>div {
+    padding: 10px;
+}
+
+</style>
+    </head>
+
+    <body>
+        <div class="container">
+            <header>
+                <img src="static/picture/logo.png" id="logo_l">
+                <p>Demo</p>
+            </header>
+
+            <div class="contont">
+                <div class="left">
+                <h4 style=" margin-top: 10px; margin-left: 20px;font-size:22px; margin-bottom: 10px;">SQL Input</h4>
+<div id="editor">SELECT count(DISTINCT h.prop_id)
+FROM (listings l JOIN hotels h ON l.prop_id=h.prop_id)
+JOIN searches s ON l.srch_id=s.srch_id
+WHERE h.prop_starrating > 2 AND predict(data) = TRUE;</div>
+                <h4 style=" margin-left: 20px;font-size:22px;margin-top: 265px; margin-bottom: 10px;">Python UDF</h4>
+
+                <div id="editor2">def predict(data):
+# Inference context setup
+## Import library dependencies
+from sklearn import *
+## Declare preprocess pipeline of each column
+num_process = Pipeline(("scaler", StandardScaler()))
+cat_process = Pipeline(("onehot", OneHotEncoder()))
+preprocessor = ColumnTransformer(
+    ("numerical", num_process, data.num_columns),
+    ("categorical", cat_process, data.cat_columns))
+## Declare the model
+model = Pipeline(preprocessor,
+        LogisticRegression(solver='liblinear'))
+## Load the model
+model.load("/path/to/model")
+# Invoke model inference
+return model.predict(data)</div>
+
+                <!-- <button type="submit" id="button_submit">run</button> -->
+            </div>
+                <div class="main">
+                    <div id="left_up" class="plan_box">
+                        <table align="center" name="SQL result">
+                            <caption align="top" style="font-weight: bold;font-size:22px;margin-top: 10px;margin-bottom: 10px;">Result Table<br></caption> 
+                            <thead>
+                                <td class="head" style="width: 222px;">srch_id</td>
+                                <td class="head" style="width: 222px;">prop_id</td>
+                                <td class="head" style="width: 222px;">xxx</td>
+                            </thead>
+                            <tbody id="tb"></tbody>
+                        </table>
+                    </div>
+                    <div id="right_up">
+                        <h4 style="float:left;margin-left:20px; margin-top: 10px; margin-right: 0;font-size:22px;">Plan Tree</h4>
+                        <!-- <svg width="500" height="400"></svg> -->
+                        <img src="static/picture/5.png" id="ru" style="width: 450px;">
+                    </div>
+
+                    <div id="down">
+                        <select name="status" id="tabs" class="selector">
+                            <!--<option>ALL</option>-->
+                            <option>Inference Context Setup Hoisting</option>
+                            <option>Adaptive Prediction Operator</option>
+                        </select>
+                        <div id ="chanpin0" class="active">
+                            <div id = "down_left">
+                                <h4 style="margin-top: 10px; margin-left: 40px; font-size: 20px; margin-bottom: 10px; width: 350px; height: 30px;">Automatic Hoisting Rewrite: </h4>
+                                <textarea spellcheck="false" style="width: 350px; height: 230px;margin-left: 40px; font-size: 18px;">CREATE PYTHON_UDF predict(data) 
+RETURNS INTEGER {
+def __init__(self):
+    # Inference context setup
+def __call__(self, *data):
+    # Data preprocess
+    # Invoke model inference
+    return self.model.predict(data)
+}
+                                </textarea>
+                            </div>
+
+                            <div id="down_right">
+                                <!-- 调整位置 -->
+                                <table style="margin-top: 10px; margin-left: 20px;font-size: 20px; align-items: center; text-align: center;">
+                                    <thead>
+                                        <td style="width:220px">Iteration Number</td>
+                                        <td style="width:220px">1</td>
+                                        <td style="width:220px">2</td>
+                                        <td style="width:220px">Query Time</td>
+                                        
+                                    </thead>
+                                    <tbody>
+                                        <tr style="line-height: 30px;">
+                                            <td>Naive Exec.</td><td><img src="static/picture/6.png"></td><td><img src="static/picture/6.png"></td><td rowspan="2">42s</td>
+                                        </tr>
+                                        <tr style="line-height: 30px;">
+                                            <td>Prediction Time</td><td>3.5s</td><td>3.5s</td>
+                                        </tr>
+    
+                                        <tr  style="line-height: 30px;">
+                                            <td>Naive Exec.</td><td><img src="static/picture/7.png" ></td><td><img src="static/picture/7.png"></td><td rowspan="2">10s</td>
+                                        </tr style="line-height: 30px;">
+                                        <tr style="line-height: 30px;">
+                                            <td>Prediction Time</td><td>0.5s</td><td>0.5s</td>
+                                        </tr>
+    
+                                    </tbody>
+                                </table>
+                            <!-- <div id ="pic1" class="chart"> -->
+                            <!-- </div> -->
+                            </div>
+                        </div>
+                        <div id ="chanpin1" class="none">
+
+                            <table style="margin-top: 10px; margin-left: 20px;font-size: 20px; align-items: center; text-align: center;">
+                                <thead>
+                                    <td style="width:220px">Iteration Number</td>
+                                    <td style="width:220px">1</td>
+                                    <td style="width:220px">2</td>
+                                    <td style="width:220px">Query Time</td>
+                                    
+                                </thead>
+                                <tbody>
+                                    <tr style="line-height: 30px;">
+                                    <td>Naive Exec.</td><td><meter min="0" max="1024" value="234">234 degrees</meter></td><td><meter min="0" max="1024" value="422">422 degrees</meter></td><td rowspan="3">42s</td>
+                                    </tr>
+                                    <tr style="line-height: 30px;"><td>Batch size</td><td>234</td><td>422</td></tr>
+                                    <tr style="line-height: 30px;">
+                                        <td>Prediction Time</td><td>3.5s</td><td>3.5s</td>
+                                    </tr>
+
+                                    <tr  style="line-height: 30px;">
+                                        <td>Naive Exec.</td><td><meter min="0" max="1024" value="512">512 degrees</meter></td><td><meter min="0" max="1024" value="1024">1024 degrees</meter></td><td rowspan="3">10s</td>
+                                    </tr style="line-height: 30px;">
+                                    <tr style="line-height: 30px;"><td>Batch size</td><td>512</td><td>1024</td></tr>
+                                    <tr style="line-height: 30px;">
+                                        <td>Prediction Time</td><td>0.5s</td><td>0.5s</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        <!-- 　　<div id ="pic2" class="chart" >
+                            <p>hello2</p>
+                        </div> -->
+                        </div>
+                    </div>
+                    <!-- <div id="left_down"></div>
+                    <div id="right_down">
+                        <figure>
+                            <figcaption>
+                              plan after
+                            </figcaption>
+                        </figure>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+
+        <script src="static/js/ace.js" type="text/javascript" charset="utf-8"></script>
+        <script>
+            var editor = ace.edit("editor");
+            editor.setTheme("ace/theme/chrome");
+            document.getElementById('editor').style.fontSize='18px';
+            editor.getSession().setMode("ace/mode/sql");  //sql、sqlserver_highlight_rules、sqlserver
+            editor.getSession().setUseWrapMode(true);
+            // 监听
+            editor.getSession().on('change', function(e) {
+                // todo
+            });
+        </script>
+        <script>
+            var editor2 = ace.edit("editor2");
+            editor2.setTheme("ace/theme/chrome");
+            document.getElementById('editor2').style.fontSize='18px';
+            editor2.getSession().setMode("ace/mode/python");  //python
+            editor2.getSession().setUseWrapMode(true);
+            // 监听
+            editor2.getSession().on('change', function(e) {
+                // todo
+            });
+        </script>
+<!-- 
+        <script type="text/javascript">
+            var canvas=document.getElementById('myCanvas');
+            var ctx=canvas.getContext('2d');
+            ctx.fillStyle='#FF0000';
+            ctx.fillRect(0,0,80,100);
+        </script> -->
+        <script src="http://echarts.baidu.com/build/dist/echarts.js"></script>
+
+        <!-- analyze -->
+    <script type="text/javascript">
+        // 路径配置
+        require.config({paths: {
+                echarts: 'http://echarts.baidu.com/build/dist'
+            }});
+        
+        require([
+                'echarts',
+                'echarts/chart/bar', // 使用柱状图就加载bar模块，按需加载
+				'echarts/chart/line'
+            ],
+            function (ec) {
+                // 基于准备好的dom，初始化echarts图表
+				var myChart2 = ec.init(document.getElementById('pic2'));
+				var option2 = {
+                    title: {
+						text: 'xxxxxxx',
+						textStyle: { //主标题文本样式{"fontSize": 24,"fontWeight": "bolder","color": "#333"}
+							fontSize: 22,
+							fontStyle: 'normal',
+							fontWeight: 'bold',
+					    },
+					},
+					tooltip: {
+						trigger: 'axis'
+					},
+					legend: {
+						data: ['origin', 'after']
+					},
+					toolbox: {
+						show: true,
+						feature: {
+					        dataView: {
+								show: true,
+								readOnly: false
+						    },
+			                magicType: {
+								show: true,
+                                type: ['line', 'bar']
+                            },
+	                        restore: {
+								show: true
+                            },
+							saveAsImage: {
+								show: true
+                            }
+						}
+                    },
+					calculable: true,
+					xAxis: [{
+						type: 'category',
+						//name: 'min_sup(%)'
+						data: ['table scan', 'predict', 'total'],
+						name: 'step',
+						position: 'left'
+					}],
+					yAxis: [{
+					    type: 'value',
+						name: '运行时间(us)',
+						position: 'left'
+					}],
+					series: [{
+						name: 'origin',
+						type: 'bar',
+						data: [8999, 7888, 16887],
+						color: '#2f4554'
+					},
+					{
+						name: 'after',
+						type: 'bar',
+						data: [5997, 6884, 12881],
+						color: '#3A0606' // 设置颜色
+					}
+					]
+				};
+                // 为echarts对象加载数据 
+				myChart2.setOption(option2);
+
+                var myChart1 = ec.init(document.getElementById('pic1'));
+				var option1 = {
+                    title: {
+						text: 'run time compare',
+						textStyle: { //主标题文本样式{"fontSize": 24,"fontWeight": "bolder","color": "#333"}
+							fontSize: 22,
+							fontStyle: 'normal',
+							fontWeight: 'bold',
+					    },
+					},
+					tooltip: {
+						trigger: 'axis'
+					},
+					legend: {
+						data: ['origin', 'after']
+					},
+					toolbox: {
+						show: true,
+						feature: {
+					        dataView: {
+								show: true,
+								readOnly: false
+						    },
+			                magicType: {
+								show: true,
+                                type: ['line', 'bar']
+                            },
+	                        restore: {
+								show: true
+                            },
+							saveAsImage: {
+								show: true
+                            }
+						}
+                    },
+					calculable: true,
+					xAxis: [{
+						type: 'category',
+						//name: 'min_sup(%)'
+						data: ['table scan', 'predict', 'total', 'test'],
+						name: 'step',
+						position: 'left'
+					}],
+					yAxis: [{
+					    type: 'value',
+						name: '运行时间(us)',
+						position: 'left'
+					}],
+					series: [{
+						name: 'origin',
+						type: 'bar',
+						data: [8999, 7888, 16887, 8837],
+						color: '#2f4554'
+					},
+					{
+						name: 'after',
+						type: 'bar',
+						data: [5997, 6884, 12881, 7777],
+						color: '#3A0606' // 设置颜色
+					}
+					]
+				};
+								
+                // 为echarts对象加载数据 
+				myChart1.setOption(option1);
+            }
+        );
+    </script>
+
+    <!--  sql output -->
+    <script>  
+        // 定义的数组,根据数组,渲染生成页面内容  
+        var arr = [
+            [18,34,39854],
+            [19,356,353],
+            [20,21,3546],
+            [21,98,453],
+            [328,345,4532],
+            [234,353,454],
+            ['xxx','xxx','xxx'],
+        ];
+        console.log(arr)
+        // 定义变量,存储要写入的内容
+        var str = '';
+
+        // 外层循环,生成tr标签,有一维单元,就循环生成几个tr标签
+        // 从第一个索引 0 开始,最终数值是索引下标的最大值 --- 数组.length-1
+        // 生成所有索引下标的数值
+        // 根据数组的结构,定义循环次数,起始数值一定是0,结束数值是索引下标的最大值
+        for(var i = 0 ; i <= arr.length-1 ; i++){
+            // console.log(arr[i]);
+            
+            // 外层循环生成tr标签,循环几次,就生成几个tr标签
+            // 因为tr标签中还要有td内容,要将两个tr标签,分开,写成拼接的形式
+            str += '<tr>';
+            // 定义tr标签的内容,也就是td单元格标签
+            // 第一个单元格是单独生成的,不参与内层循环,是 当前 外层循环 索引下标+1
+            // str += `<td>${i+1}</td>`;
+
+            // 其他单元格,是内层循环生成的,循环的对象是二维数组
+            // arr[i] 拿到的就是 每次循环,当前行,对应的二维数组 
+            // 循环的对象是 arr[i] , 生成 arr[i] 的所有的 索引下标
+            // 通过索引下标,获取对应的数据
+            // 起始数值是0 终止数值是 arr[i]的最大索引下标,arr[i]的length-1  arr[i].length-1
+            for(var j = 0 ; j <= arr[i].length-1 ; j++ ){
+                // 二维数组有几个单元,就循环几次,生成几个td单元个
+                // 可以生成对应的单元格
+                // 每一个单元的内容,就是当前二维数组单元的数据内容
+                // 获取二维数组, 数组变量[一维索引][二维索引] 一维索引是i 二维索引是j
+                // arr[i][j]
+                str += `<td>${arr[i][j]}</td>`;
+            }
+
+            str += '</tr>';
+        }
+
+        // 将定义好的内容,写入到tbody标签中
+        tb.innerHTML = str;
+
+    </script>
+    
+
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="https://dagrejs.github.io/project/dagre-d3/latest/dagre-d3.min.js"></script>
+    <script>
+        let dataset ={
+					nodes: [
+                        {id: 0, label: "result"},
+						{id: 1, label: "OPERATOR:PREDICT OP\nNAME:VIEW1\noutput((VIEW1.expedia_data_q1.prop_id))\nfilter([VIEW1.expedia_data_q1.srch_saturday_night_bool) = 1]))",shape: "rect"},
+						{id: 2, label: "OPERATOR:TABLE SCAN\nNAME:expedia_data_q1\noutput([expedia_data_q1.__pk_increment],[expedia_data_q1.srch_saturday_night_bool],\n[VIEW1.expedia_data_q1.prop_id])\nfilter(nil)\n",shape: "rect"},
+                        {id: 3, label: "start"}
+					],
+					edges: [
+                        {source: 1,target: 0,label: ""},
+						{source: 2,target: 1,label: ""},
+                        {source: 3,target: 2,label: ""},
+					]
+					}
+        // 创建 graph 对象
+        let g = new dagreD3.graphlib.Graph();
+        g.setGraph({
+            rankdir: 'TB',
+            align: 'DL',
+            nodesep: 100,
+            edgesep: 100,
+            ranksep: 50,
+            marginx: 50,
+            marginy: 100,
+        });
+        dataset.nodes.forEach(item => {
+            g.setNode(item.id, {
+            //节点标签
+            label: item.label,
+            //节点形状
+            shape: item.shape,
+            //节点样式
+            style: "textAlign: 'center';fill:#fff;stroke:#000"
+            })
+        })
+        dataset.edges.forEach(item => {
+            g.setEdge(item.source,item.target, {
+                //边标签
+                label: item.label,
+                //边样式
+                style: "fill:#fff;stroke:#333;stroke-width:1.5px"
+            })
+        })
+        // 创建渲染器
+        let render = new dagreD3.render();
+
+        // 选择 svg 并添加一个g元素作为绘图容器.
+        let svg = d3.select('svg')
+        let svgGroup = svg.append('g');
+
+        // 在绘图容器上运行渲染器生成流程图.
+        render(svgGroup, g);
+
+        // 建立拖拽缩放
+        let zoom = d3.zoom()
+            .on("zoom", function () {
+                svgGroup.attr("transform", d3.event.transform);
+            });
+        svg.call(zoom);
+
+        var styleTooltip = function (name) {
+            return "<p class='name'>" + name + "</p>";
+        };
+
+        //创建提示框
+        function createTooltip() {
+            return d3.select('body')
+                .append('div')
+                .classed('tooltip', true)
+                .style('opacity', 0)
+                .style('display', 'none');
+        };
+        let tooltip = createTooltip();
+        //tooltip显示
+        function tipVisible(textContent) {
+            tooltip.transition()
+                .duration(400)
+                .style('opacity', 0.9)
+                .style('display', 'block');
+            tooltip.html(textContent)
+                .style('left', (d3.event.pageX + 15) + 'px')
+                .style('top', (d3.event.pageY + 15) + 'px');
+        }
+        //tooltip隐藏
+        function tipHidden() {
+            tooltip.transition()
+                .duration(400)
+                .style('opacity', 0)
+                .style('display', 'none');
+        }
+
+        //鼠标悬停显示隐藏tooltip
+        svgGroup.selectAll("g.node")
+        .on("mouseover", function (v) {
+            tipVisible(g.node(v).label);
+        })
+        .on("mouseout", function (v) {
+            tipHidden();
+        })
+
+        // Center the graph
+        var xCenterOffset = (svg.attr('width') - g.graph().width) / 2;
+        svgGroup.attr('transform', 'translate(' + xCenterOffset + ', 20)');
+        svg.attr('height', g.graph().height + 40);
+    </script>
+
+    </body>
+</html>
