@@ -1,4 +1,4 @@
-### todo
+<!-- ### todo
 
 - [ ] analyze 横向排列
 - [ ] css/js 隔离
@@ -10,6 +10,8 @@
 ![](./static/img/框架3.png)
 
 ![](./static/img/框架3_1.png)
+
+![](./static/img/节点.png)
 
 
 
@@ -86,7 +88,7 @@ dataset ={
 
 <!-- 执行时加入开始节点 Start； 结束节点 Result -->
 
-
+<!-- 
 1. SQL结果图
 2. plan before & after执行计划图
 3. 运行结果图
@@ -97,3 +99,19 @@ dataset ={
 https://reactflow.dev/examples/nodes/drag-handle
 https://codesandbox.io/examples/package/dagre  (https://codesandbox.io/p/sandbox/react-flow-neng-li-yan-zheng-forked-tehpbh?file=%2Fpackage.json%3A21%2C15)
 
+https://dagrejs.github.io/project/dagre-d3/latest/demo/hover.html --> 
+
+树图
+
+```
+plantree
+├─static
+│  ├─css
+│  │  └─tipsy.css
+│  └─js
+│     ├─tipsy.js
+│     ├─d3.v5.min.js
+│     ├─dagre-d3.min.js
+│     └─jquery-1.9.1.min.js
+└─test.html
+    
